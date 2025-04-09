@@ -33,9 +33,52 @@ import java.util.*;
  */
 public class TopKFrequentElements {
 
-    // TODO: Bucket sort solution.
+    // Bucket sort solution.
     public static int[] topKFrequent(int[] nums, int k) {
-        return null;
+        HashMap<Integer, Integer> occurrencesHashMap = getOccurrencesHashMap(nums); // (num, occurrence)
+        List<Integer>[] occurrencesList = getOccurrencesArray(occurrencesHashMap, nums); // index is occurrence, value is a list of nums that have that occurrence
+        return getTopKFrequent(occurrencesList, k);
+    }
+
+    public static HashMap<Integer, Integer> getOccurrencesHashMap(int[] nums) {
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+        for (int num : nums) {
+            hashMap.put(
+                    num,
+                    hashMap.getOrDefault(num, 0) + 1
+            );
+        }
+        return hashMap;
+    }
+
+    public static List<Integer>[] getOccurrencesArray(HashMap<Integer, Integer> occurrencesHashMap, int[] nums) {
+        List<Integer>[] occurrencesList = new List[nums.length + 1];
+        for (int i = 0; i < occurrencesList.length; i++) {
+            occurrencesList[i] = new ArrayList<>();
+        }
+        for (int hashMapKey : occurrencesHashMap.keySet()) { // hashMapKey is num
+            int hashMapValue = occurrencesHashMap.get(hashMapKey); // hashMapValue is occurrences of num
+            List<Integer> numsWithOccurrences = occurrencesList[hashMapValue];
+            numsWithOccurrences.add(hashMapKey);
+        }
+        return occurrencesList;
+    }
+
+    public static int[] getTopKFrequent(List<Integer>[] occurrencesArray, int k) {
+        int[] topKFrequent = new int[k];
+        int topKFrequentInsertIndex = 0;
+
+        for (int occurrences = occurrencesArray.length - 1; occurrences > -1; occurrences--) {
+            List<Integer> numsWithOccurrences = occurrencesArray[occurrences];
+            for (int num : numsWithOccurrences) {
+                topKFrequent[topKFrequentInsertIndex] = num;
+                topKFrequentInsertIndex++;
+                if (topKFrequentInsertIndex == k) {
+                    return topKFrequent;
+                }
+            }
+        }
+        return topKFrequent;
     }
 
     // Primitive solution.
@@ -93,7 +136,7 @@ public class TopKFrequentElements {
     }
 
     public static void printExample(int[] nums, int k, String exampleId) {
-        int[] topKFrequent = topKFrequentPrimitive(nums, k);
+        int[] topKFrequent = topKFrequent(nums, k);
         System.out.println("topKFrequent" + exampleId + "=" + Arrays.toString(topKFrequent));
     }
 
