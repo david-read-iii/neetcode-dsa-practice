@@ -55,6 +55,11 @@ import java.util.HashSet;
  */
 public class ValidSudoku {
 
+    /*
+     * Hashset solution.
+     * Time complexity: O(n^2)
+     * Space complexity: O(n^2)
+     */
     public static boolean isValidSudoku(char[][] board) {
         HashSet<Character>[] horizontalCharacterOccurrences = new HashSet[9];
         HashSet<Character>[] verticalCharacterOccurrences = new HashSet[9];
