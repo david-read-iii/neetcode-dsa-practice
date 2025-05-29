@@ -43,74 +43,30 @@ package binarysearch;
 public class FindMinimumInRotatedSortedArray {
 
     // Time complexity O(log(n))
-    // Space complexity O(log(n))
+    // Space complexity O(1)
     public static int findMin(int[] nums) {
-        return findMinInternal(nums, 0, nums.length - 1);
-    }
+        int l = 0;
+        int r = nums.length - 1;
+        int res = nums[0];
 
-    public static int findMinInternal(int[] nums, int l, int r) {
-        int m = ((r - l) / 2) + l;
+        while (l <= r) {
+            // l -> r portion of array is sorted, so take nums[l] as minimum and return.
+            if (nums[l] < nums[r]) {
+                res = Math.min(res, nums[l]);
+                break;
+            }
 
-        if (isMinimum(nums, m)) {
-            return nums[m];
-        } else {
-            SearchOption searchOption = getSearchOption(nums, l, m, r);
-            if (searchOption == SearchOption.LEFT) {
-                return findMinInternal(nums, l, m - 1);
-            } else { // SearchOption.RIGHT
-                return findMinInternal(nums, m + 1, r);
+            int m = ((r - l) / 2) + l;
+            res = Math.min(res, nums[m]);
+            // nums[m] >= nums[l] means that m is in the left sorted portion of the array, so it means the minimum is right of m
+            if (nums[m] >= nums[l]) { // m is in the left sorted portion of the array
+                l = m + 1; // search right of m
+            } else { // m is in the right sorted portion of the array.
+                r = m - 1; // search left of m
             }
         }
+        return res;
     }
-
-    public static boolean isMinimum(int[] nums, int m) {
-        if (nums.length == 1) {
-            return true;
-        }
-
-        int prevIndex;
-        if (m == 0) {
-            prevIndex = nums.length - 1;
-        } else {
-            prevIndex = m - 1;
-        }
-
-        if (nums[prevIndex] > nums[m]) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static SearchOption getSearchOption(int[] nums, int l, int m, int r) {
-        int leftL = l;
-        int leftR;
-        if (m - 1 < l) {
-            leftR = m;
-        } else {
-            leftR = m - 1;
-        }
-
-        int rightL;
-        if (m + 1 > r) {
-            rightL = m;
-        } else {
-            rightL = m + 1;
-        }
-        int rightR = r;
-
-        if (leftL != leftR && nums[leftL] > nums[leftR]) {
-            return SearchOption.LEFT;
-        } else if (rightL != rightR && nums[rightL] > nums[rightR]) {
-            return SearchOption.RIGHT;
-        } else if (nums[leftL] < nums[rightL]) {
-            return SearchOption.LEFT;
-        } else { // nums[leftL] >= nums[rightL]
-            return SearchOption.RIGHT;
-        }
-    }
-
-    public enum SearchOption {LEFT, RIGHT}
 
     public static void printExample(int[] nums, String exampleId) {
         System.out.println("findMin" + exampleId + "=" + findMin(nums));
