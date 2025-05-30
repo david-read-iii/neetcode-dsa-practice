@@ -53,35 +53,34 @@ class TimeMap {
         hashMap = new HashMap<>();
     }
 
+    // Time complexity: O(1)
+    // Space complexity: O(n * m) (n = # of keys; m = # of values associated with each key)
     public void set(String key, String value, int timestamp) {
         List<DataModel> dataModelsAtKey = hashMap.getOrDefault(key, new ArrayList<>());
         dataModelsAtKey.add(new DataModel(value, timestamp));
         hashMap.put(key, dataModelsAtKey);
     }
 
+    // Time complexity: O(log(n))
+    // Space complexity: O(n * m) (n = # of keys; m = # of values associated with each key)
     public String get(String key, int timestamp) {
         List<DataModel> dataModelsAtKey = hashMap.getOrDefault(key, new ArrayList<>());
         int l = 0;
         int r = dataModelsAtKey.size() - 1;
-        DataModel result = new DataModel("", -1);
+        String result = "";
 
         while (l <= r) {
             int m = ((r - l) / 2) + l;
 
-            if (dataModelsAtKey.get(m).timestamp() <= timestamp) {
-                if (dataModelsAtKey.get(m).timestamp() > result.timestamp()) {
-                    result = dataModelsAtKey.get(m);
-                }
-            }
-
-            if (timestamp <= dataModelsAtKey.get(m).timestamp()) {
+            if (timestamp < dataModelsAtKey.get(m).timestamp()) {
                 r = m - 1; // search left
             } else {
+                result = dataModelsAtKey.get(m).value();
                 l = m + 1; // search right
             }
         }
 
-        return result.value();
+        return result;
     }
 }
 
