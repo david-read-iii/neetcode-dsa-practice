@@ -47,7 +47,7 @@ class MergeTwoSortedLinkedLists {
                 currentNode.next = list1;
                 currentNode = currentNode.next;
                 list1 = list1.next;
-            } else { // currentList1Node.val >= currentList2Node.val
+            } else { // list1.val >= list2.val
                 currentNode.next = list2;
                 currentNode = currentNode.next;
                 list2 = list2.next;
