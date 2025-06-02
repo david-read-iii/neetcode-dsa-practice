@@ -36,55 +36,32 @@ package linkedlist;
  */
 class MergeTwoSortedLinkedLists {
 
+    // Time Complexity: O(n + m) where n is the length of list1 and m is the length of list2
+    // Space Complexity: O(1)
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        ListNode headResultNode = null;
-        ListNode currentResultNode = null;
-        ListNode currentList1Node = list1;
-        ListNode currentList2Node = list2;
+        ListNode dummyNode = new ListNode();
+        ListNode currentNode = dummyNode;
 
-        while (currentList1Node != null || currentList2Node != null) {
-            if (currentList1Node != null && currentList2Node != null) {
-                if (currentList1Node.val < currentList2Node.val) {
-                    if (headResultNode == null) {
-                        headResultNode = currentList1Node;
-                        currentResultNode = currentList1Node;
-                    } else {
-                        currentResultNode.next = currentList1Node;
-                        currentResultNode = currentResultNode.next;
-                    }
-                    currentList1Node = currentList1Node.next;
-                } else { // currentList1Node.val >= currentList2Node.val
-                    if (headResultNode == null) {
-                        headResultNode = currentList2Node;
-                        currentResultNode = currentList2Node;
-                    } else {
-                        currentResultNode.next = currentList2Node;
-                        currentResultNode = currentResultNode.next;
-                    }
-                    currentList2Node = currentList2Node.next;
-                }
-            } else if (currentList1Node != null) {
-                if (headResultNode == null) {
-                    headResultNode = currentList1Node;
-                    currentResultNode = currentList1Node;
-                } else {
-                    currentResultNode.next = currentList1Node;
-                    currentResultNode = currentResultNode.next;
-                }
-                currentList1Node = currentList1Node.next;
-            } else { // currentList2Node != null
-                if (headResultNode == null) {
-                    headResultNode = currentList2Node;
-                    currentResultNode = currentList2Node;
-                } else {
-                    currentResultNode.next = currentList2Node;
-                    currentResultNode = currentResultNode.next;
-                }
-                currentList2Node = currentList2Node.next;
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                currentNode.next = list1;
+                currentNode = currentNode.next;
+                list1 = list1.next;
+            } else { // currentList1Node.val >= currentList2Node.val
+                currentNode.next = list2;
+                currentNode = currentNode.next;
+                list2 = list2.next;
             }
         }
 
-        return headResultNode;
+        // At this point, either list1 or list2 holds the rest of the ListNodes to add.
+        if (list1 != null) {
+            currentNode.next = list1;
+        } else { // list2 != null
+            currentNode.next = list2;
+        }
+
+        return dummyNode.next; // actual head is at next
     }
 }
 
