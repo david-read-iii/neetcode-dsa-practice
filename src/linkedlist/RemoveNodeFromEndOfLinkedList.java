@@ -36,32 +36,25 @@ package linkedlist;
 class RemoveNodeFromEndOfLinkedList {
 
     public ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode slow = head;
-        ListNode fast = head;
-        int fastIterations = 0;
+        ListNode dummy = new ListNode(0, head);
+        ListNode slow = dummy;
+        ListNode fast = dummy;
 
-        while (!isLastListNode(fast)) {
-            if (fastIterations >= n) {
-                slow = slow.next;
-            }
-            if (fast.next != null) {
-                fast = fast.next;
-            }
-            fastIterations++;
+        // Move fast ahead by n + 1 steps.
+        for (int i = 0; i <= n; i++) {
+            fast = fast.next;
+        }
+
+        // Move both until fast reaches the end.
+        while (fast != null) {
+            fast = fast.next;
+            slow = slow.next;
         }
 
         // slow is pointing at the node that needs to be repointed.
-        if (fastIterations < n) {
-            return slow.next;
-        } else {
-            slow.next = slow.next.next;
-        }
+        slow.next = slow.next.next;
 
-        return head;
-    }
-
-    public boolean isLastListNode(ListNode node) {
-        return node.next == null;
+        return dummy.next;
     }
 }
 
