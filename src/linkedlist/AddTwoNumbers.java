@@ -35,7 +35,6 @@ package linkedlist;
  */
 class AddTwoNumbers {
 
-    // TODO: Rewrite carry logic to be more readable.
     // Time complexity O(n)
     // Space complexity O(1)
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
@@ -49,16 +48,16 @@ class AddTwoNumbers {
             }
             resultCurr = resultCurr.next;
 
-            int sum = getListNodeValue(l1) + getListNodeValue(l2) + getValueAtResultCurr(resultCurr);
+            int sum = getValOrZero(l1) + getValOrZero(l2) + getValOfResultCurr(resultCurr);
 
-            if (sum >= 10) {
-                resultCurr.val = getSinglesPlace(sum);
-                if (resultCurr.next == null) {
-                    resultCurr.next = new ListNode(0);
+            ListNode tempNode = resultCurr;
+            while (sum > 0) {
+                tempNode.val = sum % 10;
+                sum = sum / 10;
+                if (sum > 0) {
+                    createNextNodeIfNone(tempNode);
+                    tempNode = tempNode.next;
                 }
-                resultCurr.next.val = getTensPlace(sum);
-            } else {
-                resultCurr.val = sum;
             }
 
             if (l1 != null) {
@@ -72,7 +71,7 @@ class AddTwoNumbers {
         return resultHead.next;
     }
 
-    public int getListNodeValue(ListNode listNode) {
+    public int getValOrZero(ListNode listNode) {
         if (listNode == null) {
             return 0;
         } else {
@@ -80,20 +79,22 @@ class AddTwoNumbers {
         }
     }
 
-    public int getValueAtResultCurr(ListNode resultCurr) {
-        if (resultCurr.next == null) {
-            return resultCurr.val;
-        } else {
-            return resultCurr.val + (resultCurr.next.val * 10);
+    public int getValOfResultCurr(ListNode resultCurr) {
+        int sum = 0;
+        int factor = 1;
+        ListNode listNode = resultCurr;
+        while (listNode != null) {
+            sum += listNode.val * factor;
+            factor *= 10;
+            listNode = listNode.next;
         }
+        return sum;
     }
 
-    public int getSinglesPlace(int sum) {
-        return sum % 10;
-    }
-
-    public int getTensPlace(int sum) {
-        return sum / 10;
+    public void createNextNodeIfNone(ListNode listNode) {
+        if (listNode.next == null) {
+            listNode.next = new ListNode(0);
+        }
     }
 }
 
