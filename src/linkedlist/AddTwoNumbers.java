@@ -38,27 +38,16 @@ class AddTwoNumbers {
     // Time complexity O(n)
     // Space complexity O(1)
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode resultCurr = new ListNode(0);
-        ListNode resultHead = resultCurr;
+        ListNode resultDummy = new ListNode(0);
+        ListNode resultCurr = resultDummy;
+        int carry = 0;
 
-        while (l1 != null || l2 != null) {
-
-            if (resultCurr.next == null) {
-                resultCurr.next = new ListNode(0);
-            }
+        while (l1 != null || l2 != null || carry != 0) {
+            resultCurr.next = new ListNode(0);
             resultCurr = resultCurr.next;
-
-            int sum = getValOrZero(l1) + getValOrZero(l2) + getValOfResultCurr(resultCurr);
-
-            ListNode tempNode = resultCurr;
-            while (sum > 0) {
-                tempNode.val = sum % 10;
-                sum = sum / 10;
-                if (sum > 0) {
-                    createNextNodeIfNone(tempNode);
-                    tempNode = tempNode.next;
-                }
-            }
+            int sum = getValOrZero(l1) + getValOrZero(l2) + carry;
+            resultCurr.val = sum % 10;
+            carry = sum / 10;
 
             if (l1 != null) {
                 l1 = l1.next;
@@ -68,7 +57,7 @@ class AddTwoNumbers {
             }
         }
 
-        return resultHead.next;
+        return resultDummy.next;
     }
 
     public int getValOrZero(ListNode listNode) {
@@ -76,24 +65,6 @@ class AddTwoNumbers {
             return 0;
         } else {
             return listNode.val;
-        }
-    }
-
-    public int getValOfResultCurr(ListNode resultCurr) {
-        int sum = 0;
-        int factor = 1;
-        ListNode listNode = resultCurr;
-        while (listNode != null) {
-            sum += listNode.val * factor;
-            factor *= 10;
-            listNode = listNode.next;
-        }
-        return sum;
-    }
-
-    public void createNextNodeIfNone(ListNode listNode) {
-        if (listNode.next == null) {
-            listNode.next = new ListNode(0);
         }
     }
 }
