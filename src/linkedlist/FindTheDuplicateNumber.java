@@ -36,20 +36,25 @@ class FindTheDuplicateNumber {
     // Time complexity O(n)
     // Space complexity O(1)
     public int findDuplicate(int[] nums) {
+        // Find intersection point. Store in fast.
+        int slow = 0;
+        int fast = 0;
 
-        for (int i = 0; i < nums.length; i++) {
-            int occurrenceIndex = Math.abs(nums[i]) - 1;
-            if (isOccurrenceAtIndex(nums, occurrenceIndex)) {
-                return Math.abs(nums[i]);
-            }
-            nums[occurrenceIndex] *= -1;
+        do {
+            fast = nums[fast];
+            fast = nums[fast];
+            slow = nums[slow];
+        } while (slow != fast);
+
+        // Find duplicate.
+        slow = 0;
+
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
         }
 
-        return -1;
-    }
-
-    public boolean isOccurrenceAtIndex(int[] nums, int occurrenceIndex) {
-        return nums[occurrenceIndex] < 0;
+        return slow;
     }
 }
 
