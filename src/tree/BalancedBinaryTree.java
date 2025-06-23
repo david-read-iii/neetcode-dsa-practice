@@ -34,24 +34,32 @@ package tree;
  */
 class BalancedBinaryTree {
 
-    private boolean isBalanced = true;
-
     // Time complexity O(n)
     // Space complexity O(n)
     public boolean isBalanced(TreeNode root) {
-        isBalancedInternal(root, 0);
-        return isBalanced;
+        int heightOrUnbalanced = getHeightOrUnbalanced(root);
+        return heightOrUnbalanced != -1;
     }
 
-    public int isBalancedInternal(TreeNode node, int currentHeight) {
+    /*
+     * Returns the height of the binary tree. If an unbalance tree is detected at any point, -1 is returned and
+     * propagated upwards.
+     */
+    public int getHeightOrUnbalanced(TreeNode node) {
         if (node == null) {
-            return currentHeight;
+            return 0;
         }
-        int heightLeftSubtree = isBalancedInternal(node.left, currentHeight);
-        int heightRightSubtree = isBalancedInternal(node.right, currentHeight);
+        int heightLeftSubtree = getHeightOrUnbalanced(node.left);
+        if (heightLeftSubtree == -1) {
+            return -1;
+        }
+        int heightRightSubtree = getHeightOrUnbalanced(node.right);
+        if (heightRightSubtree == -1) {
+            return -1;
+        }
         int difference = Math.abs(heightLeftSubtree - heightRightSubtree);
         if (difference > 1) {
-            isBalanced = false;
+            return -1;
         }
         return Math.max(heightLeftSubtree, heightRightSubtree) + 1;
     }
