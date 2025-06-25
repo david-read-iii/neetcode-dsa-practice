@@ -1,10 +1,5 @@
 package tree;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 /*
  * Lowest Common Ancestor in Binary Search Tree
  *
@@ -39,68 +34,32 @@ import java.util.Set;
  */
 class LowestCommonAncestorInBinarySearchTree {
 
+    // Time complexity O(h)
+    // Space complexity O(h)
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        List<TreeNode> pathToP = getListPathFromTreeNodeToRoot(root, p);
-        Set<Integer> pathToQ = getPathValuesSetFromTreeNodeToRoot(root, q);
+        TreeNode small, large;
 
-        for (int i = pathToP.size() - 1; i >= 0; i--) {
-            TreeNode currentTreeNode = pathToP.get(i);
-            if (pathToQ.contains(currentTreeNode.val)) {
-                return currentTreeNode;
-            }
+        if (p.val < q.val) {
+            small = p;
+            large = q;
+        } else {
+            small = q;
+            large = p;
         }
 
-        // No LCA detected.
-        return null;
-    }
-
-    public List<TreeNode> getListPathFromTreeNodeToRoot(TreeNode root, TreeNode searchNode) {
-        List<TreeNode> path = new ArrayList<>();
-        getListPathFromTreeNodeToRootInternal(root, searchNode, path);
-        return path;
-    }
-
-    public void getListPathFromTreeNodeToRootInternal(TreeNode currentNode, TreeNode searchNode, List<TreeNode> path) {
-        path.add(currentNode);
-        if (currentNode.val > searchNode.val) {
-            // searchNode in left subtree
-            getListPathFromTreeNodeToRootInternal(currentNode.left, searchNode, path);
-        } else if (currentNode.val < searchNode.val) {
-            // searchNode in right subtree
-            getListPathFromTreeNodeToRootInternal(currentNode.right, searchNode, path);
+        if (small.val <= root.val && root.val <= large.val) {
+            return root;
+        } else if (small.val < root.val && large.val < root.val) {
+            return lowestCommonAncestor(root.left, p, q);
+        } else { // small.val > root.val && large.val > root.val
+            return lowestCommonAncestor(root.right, p, q);
         }
-
-        // currentNode.val == searchNode.val, because we assume searchNode is always in tree somewhere
-    }
-
-    public Set<Integer> getPathValuesSetFromTreeNodeToRoot(TreeNode root, TreeNode searchNode) {
-        Set<Integer> path = new HashSet<>();
-        getPathValuesSetFromTreeNodeToRootInternal(root, searchNode, path);
-        return path;
-    }
-
-    public void getPathValuesSetFromTreeNodeToRootInternal(TreeNode currentNode, TreeNode searchNode, Set<Integer> path) {
-        path.add(currentNode.val);
-        if (currentNode.val > searchNode.val) {
-            // searchNode in left subtree
-            getPathValuesSetFromTreeNodeToRootInternal(currentNode.left, searchNode, path);
-        } else if (currentNode.val < searchNode.val) {
-            // searchNode in right subtree
-            getPathValuesSetFromTreeNodeToRootInternal(currentNode.right, searchNode, path);
-        }
-
-        // currentNode.val == searchNode.val, because we assume searchNode is always in tree somewhere
     }
 }
 
 class LowestCommonAncestorInBinarySearchTreeTester {
 
-    public static void printExample(TreeNode root, TreeNode p, TreeNode q, String exampleId) {
-        LowestCommonAncestorInBinarySearchTree lowestCommonAncestorInBinarySearchTree = new LowestCommonAncestorInBinarySearchTree();
-        System.out.println("lowestCommonAncestor" + exampleId + "=" + lowestCommonAncestorInBinarySearchTree.lowestCommonAncestor(root, p, q));
-    }
-
-    public static void main(String[] args) {
+    public static void runExample1() {
         TreeNode treeNode1 = new TreeNode(1);
         TreeNode treeNode2 = new TreeNode(2);
         TreeNode treeNode3 = new TreeNode(3);
@@ -118,6 +77,44 @@ class LowestCommonAncestorInBinarySearchTreeTester {
         treeNode8.right = treeNode9;
 
         printExample(treeNode5, treeNode3, treeNode8, "1");
+    }
+
+    public static void runExample2() {
+        TreeNode treeNode1 = new TreeNode(1);
+        TreeNode treeNode2 = new TreeNode(2);
+        TreeNode treeNode3 = new TreeNode(3);
+        TreeNode treeNode4 = new TreeNode(4);
+        TreeNode treeNode5 = new TreeNode(5);
+        TreeNode treeNode7 = new TreeNode(7);
+        TreeNode treeNode8 = new TreeNode(8);
+        TreeNode treeNode9 = new TreeNode(9);
+        treeNode5.left = treeNode3;
+        treeNode5.right = treeNode8;
+        treeNode3.left = treeNode1;
+        treeNode3.right = treeNode4;
+        treeNode1.right = treeNode2;
+        treeNode8.left = treeNode7;
+        treeNode8.right = treeNode9;
+
         printExample(treeNode5, treeNode3, treeNode4, "2");
+    }
+
+    public static void runExample3() {
+        TreeNode treeNode1 = new TreeNode(1);
+        TreeNode treeNode2 = new TreeNode(2);
+        treeNode2.left = treeNode1;
+
+        printExample(treeNode2, treeNode2, treeNode1, "3");
+    }
+
+    public static void printExample(TreeNode root, TreeNode p, TreeNode q, String exampleId) {
+        LowestCommonAncestorInBinarySearchTree lowestCommonAncestorInBinarySearchTree = new LowestCommonAncestorInBinarySearchTree();
+        System.out.println("lowestCommonAncestor" + exampleId + "=" + lowestCommonAncestorInBinarySearchTree.lowestCommonAncestor(root, p, q).val);
+    }
+
+    public static void main(String[] args) {
+        runExample1();
+        runExample2();
+        runExample3();
     }
 }
