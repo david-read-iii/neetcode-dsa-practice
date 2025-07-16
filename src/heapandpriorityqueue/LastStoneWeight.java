@@ -1,5 +1,7 @@
 package heapandpriorityqueue;
 
+import java.util.PriorityQueue;
+
 /*
  Last Stone Weight
 
@@ -41,8 +43,25 @@ package heapandpriorityqueue;
  */
 class LastStoneWeight {
 
+    // Time complexity O(n log(n))
+    // Space complexity O(n)
     public int lastStoneWeight(int[] stones) {
-        return 0;
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(
+                (o1, o2) -> o2 - o1 // Comparator for MaxHeap.
+        );
+        for (int stone: stones) {
+            maxHeap.add(stone);
+        }
+        while (maxHeap.size() > 1) {
+            int prevLargestStone = maxHeap.poll();
+            int prevSecondLargestStone = maxHeap.poll();
+            int newLargestStone = prevLargestStone - prevSecondLargestStone;
+            if (newLargestStone > 0) {
+                maxHeap.add(newLargestStone);
+            }
+        }
+
+        return maxHeap.isEmpty() ? 0 : maxHeap.poll();
     }
 }
 
