@@ -45,62 +45,16 @@ import java.util.HashMap;
  */
 class LRUCache {
 
-    private int capacity;
-    private HashMap<Integer, LruCacheNode> cache;
-    private LruCacheNode head;
-    private LruCacheNode tail;
-
     public LRUCache(int capacity) {
-        this.capacity = capacity;
-        this.cache = new HashMap<>();
-        this.head = new LruCacheNode(0, 0);
-        this.tail = new LruCacheNode(0, 0);
-        this.head.next = this.tail;
-        this.tail.prev = this.head;
+
     }
 
-    // Time complexity O(1)
-    // Space complexity O(n)
     public int get(int key) {
-        if (cache.containsKey(key)) {
-            LruCacheNode node = cache.get(key);
-            removeNode(node);
-            insertNode(node);
-            return node.val;
-        }
-        return -1;
+        return 0;
     }
 
-    // Time complexity O(1)
-    // Space complexity O(n)
     public void put(int key, int value) {
-        if (cache.containsKey(key)) {
-            removeNode(cache.get(key));
-        }
-        LruCacheNode newNode = new LruCacheNode(key, value);
-        cache.put(key, newNode);
-        insertNode(newNode);
 
-        if (cache.size() > capacity) {
-            LruCacheNode leastRecentlyUpdatedNode = head.next;
-            removeNode(leastRecentlyUpdatedNode);
-            cache.remove(leastRecentlyUpdatedNode.key);
-        }
-    }
-
-    private void removeNode(LruCacheNode node) {
-        LruCacheNode prevNode = node.prev;
-        LruCacheNode nextNode = node.next;
-        prevNode.next = nextNode;
-        nextNode.prev = prevNode;
-    }
-
-    private void insertNode(LruCacheNode node) {
-        LruCacheNode prevNode = tail.prev;
-        prevNode.next = node;
-        node.prev = prevNode;
-        node.next = tail;
-        tail.prev = node;
     }
 }
 
@@ -173,39 +127,5 @@ class LRUCacheTester {
         testCase1();
         testCase2();
         testCase3();
-    }
-}
-
-class LruCacheNode {
-    int key;
-    int val;
-    LruCacheNode prev;
-    LruCacheNode next;
-
-    LruCacheNode() {
-    }
-
-    public LruCacheNode(int key, int val) {
-        this.key = key;
-        this.val = val;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        LruCacheNode lruCacheNode = this;
-        stringBuilder.append("[");
-        while (lruCacheNode.prev != null) {
-            lruCacheNode = lruCacheNode.prev;
-        }
-        while (lruCacheNode != null) {
-            stringBuilder.append("(").append(lruCacheNode.key).append(", ").append(lruCacheNode.val).append(")");
-            if (lruCacheNode.next != null) {
-                stringBuilder.append(", ");
-            }
-            lruCacheNode = lruCacheNode.next;
-        }
-        stringBuilder.append("]");
-        return stringBuilder.toString();
     }
 }
