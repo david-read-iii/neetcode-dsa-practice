@@ -45,37 +45,38 @@ import java.util.Set;
  * You should aim for a solution as good or better than O(n) time and O(n) space, where n is the length of the given
  * string.
  */
-// TODO: Solve this using a dynamic programming approach. Not brute force.
 class DecodeWays {
 
-    int count = 0;
     Set<String> validDecodings = Set.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26");
 
     public int numDecodings(String s) {
-        exploreDecodings(0, 1, s);
-        exploreDecodings(0, 2, s);
-        return count;
-    }
+        if (s == null || s.isEmpty()) {
+            return 0;
+        }
 
-    private void exploreDecodings(int index, int countChars, String s) {
-        if (isValidDecoding(index, countChars, s)) {
-            if (index >= s.length() - countChars) {
-                count++;
+        // dp[i] means the number of ways to decode substring s[0..i]
+        int[] dp = new int[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            if (i == 0) {
+                dp[0] = s.charAt(0) != '0'
+                        ? 1
+                        : 0;
             } else {
-                int newIndex = index + countChars;
-                exploreDecodings(newIndex, 1, s);
-                exploreDecodings(newIndex, 2, s);
+                int numDecodings = 0;
+                // One-digit check.
+                if (validDecodings.contains(s.substring(i, i + 1))) {
+                    numDecodings += dp[i - 1];
+                }
+                // Two-digit check.
+                if (validDecodings.contains(s.substring(i - 1, i + 1))) {
+                    numDecodings += i - 2 >= 0
+                            ? dp[i - 2]
+                            : 1;
+                }
+                dp[i] = numDecodings;
             }
         }
-    }
-
-    private boolean isValidDecoding(int index, int countChars, String s) {
-        try {
-            String substring = s.substring(index, index + countChars);
-            return validDecodings.contains(substring);
-        } catch (IndexOutOfBoundsException e) {
-            return false;
-        }
+        return dp[dp.length - 1];
     }
 }
 
