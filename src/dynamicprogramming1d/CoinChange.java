@@ -1,5 +1,7 @@
 package dynamicprogramming1d;
 
+import java.util.Arrays;
+
 /*
  * Coin Change
  *
@@ -40,28 +42,39 @@ package dynamicprogramming1d;
  * You should aim for a solution with O(n * t) time and O(t) space, where n is the number of coins and t is the given
  * amount.
  */
-// TODO: Use dynamic programming solution to solve.
 class CoinChange {
 
+    private static final int NO_CACHE = -2;
+
     public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, NO_CACHE);
+        return coinChangeInternal(dp, coins, amount);
+    }
+
+    public int coinChangeInternal(int[] dp, int[] coins, int amount) {
         if (amount == 0) {
             return 0;
         }
         if (amount < 0) {
             return -1;
         }
+        if (dp[amount] != NO_CACHE) {
+            return dp[amount];
+        }
 
         int min = Integer.MAX_VALUE;
         for (int coin : coins) {
-            int result = coinChange(coins, amount - coin);
+            int result = coinChangeInternal(dp, coins, amount - coin);
             if (result >= 0 && result < min) {
                 min = 1 + result;
             }
         }
 
-        return min == Integer.MAX_VALUE
+        dp[amount] = min == Integer.MAX_VALUE
                 ? -1
                 : min;
+        return dp[amount];
     }
 }
 
